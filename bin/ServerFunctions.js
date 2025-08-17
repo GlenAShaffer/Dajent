@@ -1,4 +1,21 @@
 //ServerFunctions.js
+import { exec } from 'node:child_process';
+import { platform } from 'node:process';
+
+//A function for opening a browser window to a specific url.
+//This function requires logic to determine the OS.
+//Make sure that xdg-open will recognize the url as a url and not a resource location.
+export function openBrowser(url){
+    let command;
+    if(platform == 'linux'){
+        command = `xdg-open ${url}`; //Linux
+    }
+    //!!!TO DO: add win32!!!
+
+    //!!!TO DO: add Darwin!!!
+    
+    exec(command);
+}
 
 //A function for creating a code verifier
 //The code verifier must be 43 to 128 characters long, and contain letters, digits, underscores, periods, hyphens, tildes.
