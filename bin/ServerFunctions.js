@@ -20,3 +20,7 @@ export async function generateCodeChallenge(code_verifier) {
     console.log("Hash: " + hash);
     return btoa(String.fromCharCode(... new Uint8Array(hash))).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 };
+
+//A function for requesting an authorization code
+
+//A function for requesting an access token
