@@ -45,8 +45,8 @@ app.get('/callback', function(req, res) {
 
 //Set up the server
 const credentials = {
-    key: readFileSync('./bin/private-key.pem'),
-    cert: readFileSync('./bin/certificate.pem')
+    key: readFileSync('./dev_secrets/private-key.pem'),
+    cert: readFileSync('./dev_secrets/certificate.pem')
 };
 
 const httpServer = http.createServer(app);
