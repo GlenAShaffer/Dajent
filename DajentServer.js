@@ -3,28 +3,45 @@
 //Imports
 //Remember that generateCodeChallenge is async.
 import {newCodeVerifier, generateCodeChallenge, openBrowser} from './bin/ServerFunctions.js';
-import { createServer } from 'node:https';
+import http from 'node:http';
+import https from 'node:https';
 import { readFileSync } from 'node:fs';
+import express from 'express';
 
-//Variables
-const PORT = 8080;
+//Variables and Callbacks
+const PORT_HTTP = 8000;
+const PORT_HTTPS = 8080;
+
+const app = express();
 
 //Script
 const code_verifier = newCodeVerifier();
 const code_challenge =  await generateCodeChallenge(code_verifier);
 
-//Server options
-const server_options = {
+//Middleware
+app.get('/', function(req, res) {
+    res.send('Hello, world! This is Dajent!');
+});
+
+//---catching the authorization callback
+app.get('/callback', function(req, res) {
+    console.log();
+});
+
+//Set up the server
+const credentials = {
     key: readFileSync('./bin/private-key.pem'),
     cert: readFileSync('./bin/certificate.pem')
 };
 
-createServer(server_options, function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.write(`Hello World! This is Dajent.`);
-  res.end();
-}).listen(8080);
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(credentials, app);
 
-console.log(`Dajent Server listening on port ${PORT}.`);
+httpServer.listen(PORT_HTTP);
+httpsServer.listen(PORT_HTTPS);
 
-openBrowser(`https://localhost:${PORT}`);
+console.log(`Dajent HTTP Server listening on port ${PORT_HTTP}.`);
+console.log(`Dajent HTTP Server listening on port ${PORT_HTTPS}.`);
+
+//Automatically open the browser
+openBrowser(`https://localhost:${PORT_HTTPS}`);
