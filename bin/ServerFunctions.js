@@ -25,7 +25,6 @@ export function newCodeVerifier() {
     return values.reduce((acc, x) => acc + possible[x % possible.length], "");
 };
 
-
 //A function for generating a code challenge
 //This function should take a code verifier, hash it using SHA256, and then encode it in base64.
 //Remember that crypto.subtle.digest is async, and that this function is async.
@@ -35,14 +34,5 @@ export async function generateCodeChallenge(code_verifier) {
     const hash = await crypto.subtle.digest('SHA-256', encoded_string);
     return btoa(String.fromCharCode(... new Uint8Array(hash))).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 };
-
-//A function for requesting a user authorization
-export async function reqUserAuth() {
-    const CLIENT_ID = 'a4800ce21bd4427aad8f0823220cf283'; //This is from the Spotify for Developers account page for Dajent Server.
-    const REDIRECT_URI = 'https://127.0.0.1:8080/callback'; //This is also from the Spotify for Developers account page.
-    
-    const scope = 'user-read-currently-playing user-modify-playback-state';
-    const AUTH_URL = new URL("https://accounts.spotify.com/authorize");
-}
 
 //A function for requesting an access token
