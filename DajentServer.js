@@ -2,12 +2,11 @@
 
 //Imports
 //Remember that generateCodeChallenge is async.
-import {newCodeVerifier, generateCodeChallenge, openBrowser} from './bin/ServerFunctions.js';
+import {newCodeVerifier, generateCodeChallenge, openBrowser, reqAccessToken} from './bin/ServerFunctions.js';
 import http from 'node:http';
 import https from 'node:https';
 import { readFileSync } from 'node:fs';
 import express from 'express';
-import qs from 'qs';
 
 import { generateUserAuthReqPage } from './pages/UserAuthReqPage.js';
 
@@ -24,10 +23,6 @@ const code_challenge =  await generateCodeChallenge(code_verifier);
 //Middleware
 app.set('view engine', 'ejs');
 
-app.set('query parser', function(str){
-    qs.parse(str);
-});
-
 app.get('/', function(req, res) {
     res.send('Hello, world! This is Dajent!');
 });
@@ -39,8 +34,14 @@ app.get('/request_user_authentication', function(req, res) {
 });
 
 //---catching the authorization callback
-app.get('/callback', function(req, res) {
-    console.log(req.query);
+app.get('/callback', async function(req, res) {
+    const authorization_code = req.query.code;
+    const token = await reqAccessToken(code_verifier, authorization_code);
+    res.redirect('/success');
+});
+
+app.get('/success', function(req, res) {
+    res.send('Token aquisition successful');
 });
 
 //Set up the server

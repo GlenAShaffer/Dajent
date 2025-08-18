@@ -1,6 +1,7 @@
 //ServerFunctions.js
 import { exec } from 'node:child_process';
 import { platform } from 'node:process';
+import { request } from 'node:https';
 
 //A function for opening a browser window to a specific url.
 //This function requires logic to determine the OS.
@@ -36,3 +37,24 @@ export async function generateCodeChallenge(code_verifier) {
 };
 
 //A function for requesting an access token
+export async function reqAccessToken(code_verifier, authorization_code) {
+    const url = 'https://accounts.spotify.com/api/token';
+    const payload = {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+        client_id: 'a4800ce21bd4427aad8f0823220cf283',
+        grant_type: 'authorization_code',
+        code: authorization_code,
+        redirect_uri: 'https://127.0.0.1:8080/callback',
+        code_verifier: code_verifier,
+        }),
+    }
+
+    const body = await fetch(url, payload);
+    const response = await body.json();
+    
+    return response.access_token;
+}

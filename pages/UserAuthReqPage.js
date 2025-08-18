@@ -7,7 +7,7 @@ export function generateUserAuthReqPage(code_verifier, code_challenge){
         const clientId = 'a4800ce21bd4427aad8f0823220cf283';
         const redirectUri = 'https://127.0.0.1:8080/callback';
 
-        const scope = '';
+        const scope = 'user-modify-playback-state user-read-currently-playing';
         const authUrl = new URL("https://accounts.spotify.com/authorize")
 
         // generated in the previous step
@@ -24,6 +24,8 @@ export function generateUserAuthReqPage(code_verifier, code_challenge){
 
         authUrl.search = new URLSearchParams(params).toString();
         window.location.href = authUrl.toString();
+
+        
     </script>
     `;
     return page;
